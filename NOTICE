@@ -1,0 +1,38 @@
+Vibe Coding Boilerplate
+Copyright (c) 2024
+
+This boilerplate includes the following open source components:
+
+Backend Dependencies:
+- FastAPI (MIT License) - Modern, fast web framework for building APIs
+- SQLAlchemy (MIT License) - SQL toolkit and Object-Relational Mapping
+- Pydantic (MIT License) - Data validation using Python type hints
+- Uvicorn (BSD License) - ASGI web server implementation
+- Poetry (MIT License) - Python dependency management
+- Pytest (MIT License) - Testing framework
+- Ruff (MIT License) - Fast Python linter and formatter
+
+Frontend Dependencies:
+- React (MIT License) - JavaScript library for building user interfaces
+- TypeScript (Apache 2.0) - Typed superset of JavaScript
+- Vite (MIT License) - Fast build tool and development server
+- Vitest (MIT License) - Fast unit testing framework
+- ESLint (MIT License) - JavaScript linter
+- Prettier (MIT License) - Code formatter
+
+Infrastructure:
+- PostgreSQL (PostgreSQL License) - Open source relational database
+- Docker (Apache 2.0) - Containerization platform
+
+Development Tools:
+- Make (GPL) - Build automation tool
+- Pre-commit (MIT License) - Git hook framework
+
+This boilerplate is designed to help developers quickly start new projects
+with a solid foundation of modern web development tools and best practices.
+
+For specific license terms of each component, please refer to their
+respective repositories and documentation.
+
+Third-party licenses and attributions should be maintained when using
+this boilerplate in your projects.
