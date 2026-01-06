@@ -8,6 +8,29 @@
 - `.env` is secret and MUST NOT be committed. Use `.env.example` for documentation only.
 - If an MCP-based reference is required (Figma/ClickUp/GDrive), STOP and ask the user for approval and env completion first.
 
+## FormData Validation Guidelines
+
+### Frontend (React + TypeScript)
+- Use `src/validators/formData.ts` for Zod-based schema definitions
+- Implement validation hooks using `src/hooks/useFormDataValidation.ts`
+- Follow the pattern in `src/components/FormDataDemo.tsx` for form implementations
+- Always validate client-side before server submission
+
+### Backend (FastAPI + Python)
+- Use Pydantic schemas in `app/schemas/item_with_file.py`
+- Implement endpoints in `app/api/items_with_file.py`
+- Follow structured error responses with `{ field, code, message }` format
+- Maintain server-side validation as final authority
+
+### Validation Flow
+1. Client validation with Zod (immediate feedback)
+2. FormData creation from validated data
+3. Server validation with Pydantic (final authority)
+4. Structured error responses for UX
+
+### References
+- See `FormData_Validation_Guide.md` for complete implementation details
+
 ## Project Structure
 
 ```

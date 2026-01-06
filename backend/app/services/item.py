@@ -13,7 +13,7 @@ class ItemService:
     def __init__(self, db: AsyncSession):
         self.repository = ItemRepository(db)
 
-    async def create_item(self, item_data: ItemCreate) -> ItemResponse:
+    async def create_item(self, item_data: ItemCreate | dict, file_metadata: dict | None = None) -> ItemResponse:
         """Create a new item with business logic validation."""
         # Add any business logic here (validation, processing, etc.)
         item = await self.repository.create(item_data)

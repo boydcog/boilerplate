@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api import health, items
+from app.api import health, items, items_with_file
 from app.core.config import settings
 
 # Create FastAPI app
@@ -32,6 +32,7 @@ app.add_middleware(
 # API routes
 app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(items.router, prefix="/api", tags=["items"])
+app.include_router(items_with_file.router, prefix="/api", tags=["items-with-file"])
 
 # Static files
 static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
