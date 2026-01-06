@@ -56,3 +56,5 @@ coverage/
 # Misc
 .cache/
 .parcel-cache/
+
+google-service-account.json

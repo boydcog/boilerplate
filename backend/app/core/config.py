@@ -49,10 +49,6 @@ class Settings(BaseSettings):
     MCP_SERVER_URL: str = "http://localhost:8080"
 
     # External Services
-    FIGMA_ACCESS_TOKEN: str = ""
-    FIGMA_FILE_ID: str = ""
-    FIGMA_TEAM_ID: str = ""
-
     CLICKUP_API_TOKEN: str = ""
     CLICKUP_WORKSPACE_ID: str = ""
     CLICKUP_TEAM_ID: str = ""

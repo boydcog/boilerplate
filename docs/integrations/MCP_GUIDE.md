@@ -8,26 +8,20 @@ MCP enables secure integration with external services like Figma, ClickUp, and G
 
 ## Supported Integrations
 
-### 1. Figma Integration
-Access design systems, components, and assets directly from Figma.
+### 1. Figma Integration (Local MCP Desktop)
+Access design systems, components, and assets directly from the Figma desktop session via the local MCP server (e.g., `http://127.0.0.1:3845/mcp`).
 
 **Use Cases:**
 - Sync design tokens and components
 - Generate code from Figma designs
 - Maintain design-development consistency
 
-**Required Environment Variables:**
-```bash
-FIGMA_ACCESS_TOKEN=your_figma_token
-FIGMA_FILE_ID=your_file_id
-FIGMA_TEAM_ID=your_team_id  # optional
-```
+**Auth:** None required in `.env` (uses the signed-in local Figma app session). Make sure the Figma app is open and logged in; if the MCP server is unreachable, inform the user to open Figma and check the local MCP endpoint.
 
 **Setup Steps:**
-1. Get Figma access token from [Figma Developer Settings](https://www.figma.com/developers/api#access-tokens)
-2. Find your file ID from the Figma URL: `figma.com/file/FILE_ID/...`
-3. Update `.env` with your credentials
-4. Enable MCP: `MCP_ENABLED=true`
+1. Open Figma desktop and log in
+2. Ensure local MCP server is running (e.g., `http://127.0.0.1:3845/mcp`)
+3. Enable MCP: `MCP_ENABLED=true`
 
 ### 2. ClickUp Integration
 Sync project management data and automate workflows.
@@ -132,13 +126,11 @@ class FigmaService:
 // src/services/mcp.ts
 interface MCPConfig {
   enabled: boolean;
-  figmaToken?: string;
   clickupToken?: string;
 }
 
 export const mcpConfig: MCPConfig = {
   enabled: import.meta.env.VITE_MCP_ENABLED === 'true',
-  figmaToken: import.meta.env.VITE_FIGMA_ACCESS_TOKEN,
   clickupToken: import.meta.env.VITE_CLICKUP_API_TOKEN,
 };
 ```
