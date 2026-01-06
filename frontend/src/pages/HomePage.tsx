@@ -1,121 +1,148 @@
 import { Link } from 'react-router-dom';
-import { useItemCount } from '../hooks/useItems';
+import { useMemo } from 'react';
 import Button from '../components/ui/Button';
+import PostCard from '../components/posts/PostCard';
+import { usePosts } from '../hooks/usePosts';
 
 const HomePage = (): JSX.Element => {
-  const { data: countData, isLoading } = useItemCount();
+  const { data: posts = [], isLoading, refetch } = usePosts({
+    status: 'published',
+    limit: 20,
+  });
+
+  const trendingTags = useMemo(() => {
+    const counts: Record<string, number> = {};
+    posts.forEach((post) => {
+      (post.tags || []).forEach((tag) => {
+        counts[tag] = (counts[tag] || 0) + 1;
+      });
+    });
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([tag, count]) => ({ tag, count }));
+  }, [posts]);
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Welcome to Vibe Boilerplate
-        </h1>
-        <p className="text-xl text-gray-600 mb-8">
-          A fullstack boilerplate ready for your MVP development
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-            🚀 Quick Start
-          </h2>
-          <ul className="space-y-2 text-gray-600">
-            <li>✅ FastAPI backend with PostgreSQL</li>
-            <li>✅ React frontend with TypeScript</li>
-            <li>✅ Docker development environment</li>
-            <li>✅ Sample CRUD implementation</li>
-            <li>✅ Testing setup (pytest + vitest)</li>
-            <li>✅ Code quality tools (ruff + eslint)</li>
-          </ul>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-            📊 Current Status
-          </h2>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Total Items:</span>
-              <span className="font-semibold">
-                {isLoading ? '...' : countData?.count || 0}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">API Status:</span>
-              <span className="text-green-600 font-semibold">✅ Running</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Database:</span>
-              <span className="text-green-600 font-semibold">✅ Connected</span>
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-white">
+      <div className="max-w-6xl mx-auto px-4 py-10 space-y-8">
+        <div className="bg-white/80 backdrop-blur border border-slate-200 rounded-2xl p-8 shadow-sm relative overflow-hidden">
+          <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-sky-100/70 to-transparent pointer-events-none" />
+          <div className="space-y-4 relative z-10">
+            <p className="text-xs uppercase tracking-[0.3em] text-sky-600 font-semibold">
+              Community Feed
+            </p>
+            <h1 className="text-4xl font-bold text-slate-900 leading-tight">
+              커뮤니티 피드에서 관심사를 찾아보세요
+            </h1>
+            <p className="text-lg text-slate-600 max-w-3xl">
+              피드에서 글을 둘러보고, 태그로 관심사를 빠르게 찾아보세요.
+              최신 트렌드를 한눈에 확인할 수 있습니다.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/posts/new">
+                <Button size="lg">글 작성하기</Button>
+              </Link>
+              <Link to="/posts">
+                <Button variant="secondary" size="lg">
+                  전체 피드 보기
+                </Button>
+              </Link>
+              <Button variant="secondary" onClick={() => refetch()}>
+                새로고침
+              </Button>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="text-center space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-900">
-          Ready to build your MVP?
-        </h2>
-        <p className="text-gray-600 mb-6">
-          Start by exploring the sample Items implementation, then extend it
-          with your own features.
-        </p>
-        <div className="space-x-4">
-          <Link to="/items">
-            <Button size="lg">Explore Items Demo</Button>
-          </Link>
-          <a href="/docs" target="_blank" rel="noopener noreferrer">
-            <Button variant="secondary" size="lg">
-              View API Docs
-            </Button>
-          </a>
-        </div>
-      </div>
+        <div className="grid lg:grid-cols-[2fr,1fr] gap-6 items-start">
+          <section className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                  Live Feed
+                </p>
+                <h2 className="text-2xl font-bold text-slate-900">
+                  커뮤니티 최신 글
+                </h2>
+              </div>
+              <Link to="/my-posts" className="text-sm text-sky-700 hover:underline">
+                내 글 관리 →
+              </Link>
+            </div>
+            {isLoading ? (
+              <div className="text-sm text-slate-500">피드를 불러오는 중...</div>
+            ) : posts.length === 0 ? (
+              <div className="border border-dashed border-slate-200 rounded-xl p-6 text-center bg-white/60">
+                <p className="text-slate-600 mb-3">
+                  아직 발행된 글이 없습니다. 첫 글을 작성해보세요!
+                </p>
+                <Link to="/posts/new">
+                  <Button>첫 글 작성하기</Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} showActions={false} />
+                ))}
+              </div>
+            )}
+          </section>
 
-      <div className="mt-16 bg-blue-50 p-8 rounded-lg">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-          🛠️ Development Guidelines
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-2">
-              Backend (FastAPI)
-            </h3>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>
-                • Follow the layered architecture (API → Service → Repository)
-              </li>
-              <li>• Use SQLAlchemy 2.x with async sessions</li>
-              <li>• Write tests with pytest</li>
-              <li>• Format code with ruff</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-2">
-              Frontend (React)
-            </h3>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Use TypeScript for type safety</li>
-              <li>• React Query for API state management</li>
-              <li>• Write tests with Vitest</li>
-              <li>• Follow component composition patterns</li>
-            </ul>
-          </div>
-        </div>
-        <div className="mt-6 text-sm text-gray-600">
-          <p>
-            📚 Read the{' '}
-            <code className="bg-white px-2 py-1 rounded">
-              AGENT_PLAYBOOK.md
-            </code>{' '}
-            and
-            <code className="bg-white px-2 py-1 rounded ml-1">
-              _CODING_GUIDELINES.md
-            </code>{' '}
-            for detailed development rules.
-          </p>
+          <aside className="space-y-4">
+            <div className="bg-white/80 border border-slate-200 rounded-2xl p-5 shadow-sm">
+              <h3 className="text-sm font-semibold text-slate-900 mb-3">
+                트렌딩 태그
+              </h3>
+              {trendingTags.length === 0 ? (
+                <p className="text-sm text-slate-500">
+                  태그가 곧 채워질 거예요. 글을 발행해보세요.
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {trendingTags.map((item) => (
+                    <Link
+                      key={item.tag}
+                      to={`/posts?tag=${encodeURIComponent(item.tag)}`}
+                      className="px-3 py-1.5 rounded-full bg-sky-100 text-sky-700 text-xs font-semibold hover:bg-sky-200"
+                    >
+                      #{item.tag}{' '}
+                      <span className="text-slate-500 font-normal">
+                        {item.count}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="bg-white/80 border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+              <h3 className="text-sm font-semibold text-slate-900">
+                빠른 액션
+              </h3>
+              <div className="space-y-2">
+                <Link
+                  to="/posts/new"
+                  className="flex items-center justify-between px-3 py-2 rounded-lg bg-sky-50 text-sky-800 hover:bg-sky-100"
+                >
+                  새 글 작성하기 <span>→</span>
+                </Link>
+                <Link
+                  to="/my-posts"
+                  className="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-50 text-slate-800 hover:bg-slate-100"
+                >
+                  내 글 관리 <span>→</span>
+                </Link>
+                <Link
+                  to="/profile"
+                  className="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-50 text-slate-800 hover:bg-slate-100"
+                >
+                  프로필 설정 <span>→</span>
+                </Link>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </div>

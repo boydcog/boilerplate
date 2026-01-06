@@ -1,8 +1,8 @@
-# Boilerplate
+# Emocog Blog
 
-> **Note**: This is a boilerplate template. Replace this title and description with your actual project name and details.
+스카이블루 + 무채색 톤의 커뮤니티형 블로그 서비스입니다. 로컬 로그인, 글 작성/관리, 프로필 편집, 태그 탐색까지 기본 제공하며 FastAPI(백엔드) + React/TypeScript(프론트) 기반으로 쉽게 확장할 수 있습니다.
 
-A fullstack web application boilerplate with FastAPI backend and React frontend, designed for rapid MVP development and easy extension.
+![커뮤니티 피드 화면](docs/images/page.png)
 
 ## 🚀 Quick Start
 
@@ -16,7 +16,7 @@ make setup
 make dev-integrated
 ```
 
-Visit http://localhost:8000 for both frontend and API docs.
+통합 개발 서버: http://localhost:8000 (프론트 + API docs)
 
 ## 📋 Prerequisites
 
@@ -27,11 +27,11 @@ Visit http://localhost:8000 for both frontend and API docs.
 
 ## 🏗️ Architecture
 
-- **Backend**: FastAPI + SQLAlchemy + PostgreSQL
-- **Frontend**: React + TypeScript + Vite
-- **Database**: PostgreSQL with async SQLAlchemy
-- **Development**: Docker Compose for local development
-- **Testing**: pytest (backend) + Vitest (frontend)
+- **Backend**: FastAPI + SQLAlchemy (async) + PostgreSQL, JWT 로컬 로그인, Posts/Users 모델
+- **Frontend**: React + TypeScript + Vite, 커뮤니티형 피드 UI, 태그/검색 기반 글 탐색
+- **Database**: PostgreSQL (개발 모드에서 테이블 자동 생성)
+- **Testing**: pytest (백엔드), Vitest (프론트)
+- **Dev**: Docker Compose, Make 기반 스크립트
 
 ## 📁 Project Structure
 
@@ -113,14 +113,11 @@ make dev-integrated    # Frontend built into backend
 
 ## 📚 Sample Implementation
 
-The boilerplate includes a complete **Items CRUD** implementation as a reference:
-
-- **Backend**: `/api/items` endpoints with full CRUD operations
-- **Frontend**: Items management interface
-- **Database**: PostgreSQL with SQLAlchemy models
-- **Tests**: Both unit and integration tests
-
-Use this as a template for implementing your own features.
+- **Auth**: 로컬 이메일/비밀번호 가입 및 로그인 (`/api/auth/register`, `/api/auth/login`)
+- **Posts**: 게시글 생성/조회/수정/삭제, 상태(발행/임시/비공개), 태그/카테고리, 조회수/좋아요 필드
+- **Profile**: 프로필 조회/수정 (닉네임/소개/아바타 URL)
+- **Frontend 피드**: 홈에서 최신 발행 글, 트렌딩 태그, 빠른 액션(글 작성/내 글 관리/프로필) 제공
+- **Items CRUD**: 기존 샘플 CRUD 구현은 패턴 참고용으로 유지
 
 ## 🧪 Testing
 

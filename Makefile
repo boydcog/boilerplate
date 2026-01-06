@@ -64,7 +64,7 @@ dev-integrated:
 	rm -rf backend/static
 	cp -r frontend/dist backend/static
 	@echo "🔧 Starting backend with integrated frontend..."
-	cd backend && poetry run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+	cd backend && poetry run uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 	@echo "✅ Integrated server started!"
 	@echo "🌐 Application: http://localhost:8000"
 	@echo "📚 API Docs: http://localhost:8000/docs"

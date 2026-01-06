@@ -8,7 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api import health, items, items_with_file
+from app.api import auth, health, items, items_with_file, posts, profile
+from app.core.database import init_db
 from app.core.config import settings
 
 # Create FastAPI app
@@ -31,8 +32,20 @@ app.add_middleware(
 
 # API routes
 app.include_router(health.router, prefix="/api", tags=["health"])
+app.include_router(auth.router, prefix="/api", tags=["auth"])
 app.include_router(items.router, prefix="/api", tags=["items"])
 app.include_router(items_with_file.router, prefix="/api", tags=["items-with-file"])
+app.include_router(posts.router, prefix="/api", tags=["posts"])
+app.include_router(profile.router, prefix="/api", tags=["profile"])
+
+
+@app.on_event("startup")
+async def on_startup() -> None:
+    """Initialize database tables on startup (development convenience)."""
+    # Import models to ensure metadata is populated
+    import app.models  # noqa: F401
+
+    await init_db()
 
 # Static files
 static_dir = os.path.join(os.path.dirname(__file__), "..", "static")

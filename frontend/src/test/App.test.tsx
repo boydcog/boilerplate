@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { vi } from 'vitest';
 import App from '../App';
+import { AuthProvider } from '../hooks/useAuth';
 
 // Mock react-hot-toast
 vi.mock('react-hot-toast', () => ({
@@ -28,7 +29,9 @@ const renderWithProviders = (
   const testQueryClient = createTestQueryClient();
   return render(
     <QueryClientProvider client={testQueryClient}>
-      <BrowserRouter>{ui}</BrowserRouter>
+      <BrowserRouter>
+        <AuthProvider>{ui}</AuthProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 };
@@ -42,6 +45,7 @@ describe('App', () => {
   it('displays navigation links', () => {
     renderWithProviders(<App />);
     expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /^items$/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /posts/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /로그인/i })).toBeInTheDocument();
   });
 });
